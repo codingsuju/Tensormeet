@@ -1,10 +1,15 @@
 package com.example.Tensormeet.Controllers;
 
 import com.example.Tensormeet.Model.AppUser;
+import com.example.Tensormeet.Model.Profile;
 import com.example.Tensormeet.Model.ResponseMessage;
 import com.example.Tensormeet.Model.Username;
+import com.example.Tensormeet.Repository.ProfileRepository;
 import com.example.Tensormeet.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -16,17 +21,25 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    ProfileRepository profileRepository;
     @PostMapping("/api/register")
-    public ResponseMessage register(@RequestBody AppUser clientuser){
+    public AppUser register(@RequestBody AppUser clientuser){
         if(userRepository.findByUsername(clientuser.getUsername())!=null){
-            return new ResponseMessage("username not available");
+            return new AppUser();
         }
         AppUser user=new AppUser();
         user.setUsername(clientuser.getUsername());
-        user.setPassword(clientuser.getPassword());
+        user.setPassword(new BCryptPasswordEncoder().encode(clientuser.getPassword()));
         user.setRole("USER");
         userRepository.save(user);
-        return new ResponseMessage("success");
+        Profile profile=new Profile();
+        profile.setBio("User at Tensormeet");
+        profile.setInterest("using Tensormeet");
+        profile.setUsername(clientuser.getUsername());
+        profile.setProfilename("Tensormeet user");
+        profileRepository.save(profile);
+        return user;
     }
     @GetMapping("/username")
     public Username getCurrentUser(Principal principal){
