@@ -10,7 +10,7 @@ spring.profiles.active=local
 ```
 mvn spring-boot:run
 ```
-If you do not have Maven installed locally on your machine, run the following command instead
+* If you do not have Maven installed locally on your machine, run the following command instead
 ```
 ./mvnw spring-boot:run
 ```
