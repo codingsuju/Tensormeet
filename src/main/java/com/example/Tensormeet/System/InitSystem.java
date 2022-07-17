@@ -20,7 +20,7 @@ public class InitSystem {
     ProfileRepository profileRepository;
     @Autowired
     MessageRepository messageRepository;
-    @GetMapping("/")
+    @GetMapping("/init/start")
     public String init(){
         //Create Users
         AppUser u1=new AppUser();
